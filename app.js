@@ -4,8 +4,7 @@ const { graphqlHTTP } = require('express-graphql');
 const config = require('./config/config');
 const mongodbConfigHelper = require(`./config/mongo.config`);
 const appMiddleware = require(`./config/app.middleware`);
-const {typeDefs} = require('./src/graphql/typeDefs');
-const {resolvers} = require('./src/graphql/resolvers');
+const schema = require("./src/graphql/schema");
 
 const app = express();
 const onAppStart = () => {
@@ -20,14 +19,12 @@ onAppStart(app);
 
 // GraphQL Queries
 app.use(`${config.API_BASE}/graphql`, graphqlHTTP({
-    schema: typeDefs,
-    rootValue: resolvers,
+    schema: schema,
     graphiql: true,
 }));
 
 // Express Routes
 app.get('/', (req, res) => res.status(200).json({"message":"Welcome to Express GraphQL Server API.."}));
-
 
 process.on('uncaughtException', function (error) {
     console.error((new Date).toUTCString() + ' uncaughtException Message :: ', error.message);
